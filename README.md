@@ -9,3 +9,10 @@ This is a basic ATM (Automated Teller Machine) simulation project built using Py
 - Withdraw functionality with balance check
 - Secure balance checking
 - Encapsulated attributes for basic security
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/hussain-jawaid/ATM-System-OOP
+cd ATM-System-OOP
