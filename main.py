@@ -94,5 +94,7 @@ class ATM:
             except ValueError:
                 print("Please choose a valid option!")
 
-hbl = ATM(1000)
-hbl.menu()
+if __name__ == '__main__':
+    hbl = ATM(1000)
+    hbl.menu()
+    
