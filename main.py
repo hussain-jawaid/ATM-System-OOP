@@ -1,4 +1,4 @@
-class ATM:
+class Atm:
     def __init__(self, balance):
         self.__balance = balance
         self.__pin = 0
@@ -98,5 +98,5 @@ class ATM:
 
 
 if __name__ == '__main__':
-    hbl = ATM(1000)
+    hbl = Atm(1000)
     
