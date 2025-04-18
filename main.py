@@ -2,8 +2,34 @@ class ATM:
     def __init__(self, balance):
         self.__balance = balance
         self.__pin = 0
+        
+        self.__menu()
 
-        self.menu()
+    def __menu(self):
+        flag = True
+        while flag:
+            try:
+                option = int(input("\nHello, how would you like to proceed?\n"
+                            "1. Enter 1 to create a PIN\n"
+                            "2. Enter 2 to deposit\n"
+                            "3. Enter 3 to withdraw\n"
+                            "4. Enter 4 to check balance\n"
+                            "5. Enter 5 to exit\n"
+                            "Choose an option: "))
+                if option == 1:
+                    self.create_pin()
+                elif option == 2:
+                    self.deposit()
+                elif option == 3:
+                    self.withdraw()
+                elif option == 4:
+                    self.check_balance()
+                elif option == 5:
+                    flag = False
+                else:
+                    print("Invalid option. Please choose a number between 1 and 5.")
+            except ValueError:
+                print("Please choose a valid option!")
 
     def create_pin(self):
         pin_flag = True
@@ -44,7 +70,7 @@ class ATM:
             try:
                 pin = int(input("Enter your PIN: "))
                 if pin > 0 and pin == self.__pin:
-                    print(f"\nYour current balance: ${round(self.__balance, 2)}.")
+                    print(f"\nYour current balance: ${round(self.__balance, 2)}")
                     amount = float(input("Enter the amount to withdraw: "))
                     if amount <= self.__balance and amount > 0:
                         self.__balance -= amount
@@ -63,38 +89,13 @@ class ATM:
             try:
                 pin = int(input("Enter your PIN: "))
                 if pin == self.__pin:
-                    print(f"Your current balance: ${round(self.__balance, 2)}.")
+                    print(f"Your current balance: ${round(self.__balance, 2)}")
                     balance_flag = False
                 else:
                     print("You entered an incorrect PIN. Please try again.")
             except ValueError:
                 print("Please enter a four-digit PIN (letters not allowed)!")
 
-    def menu(self):
-        flag = True
-        while flag:
-            print("\nHello, how would you like to proceed?")
-            print("1. Enter 1 to create a PIN\n"
-                  "2. Enter 2 to deposit\n"
-                  "3. Enter 3 to withdraw\n"
-                  "4. Enter 4 to check balance\n"
-                  "5. Enter 5 to exit\n")
-            try:
-                option = int(input("Choose an option: "))
-                if option == 1:
-                    self.create_pin()
-                elif option == 2:
-                    self.deposit()
-                elif option == 3:
-                    self.withdraw()
-                elif option == 4:
-                    self.check_balance()
-                elif option == 5:
-                    flag = False
-                else:
-                    print("Invalid option. Please choose a number between 1 and 5.")
-            except ValueError:
-                print("Please choose a valid option!")
 
 if __name__ == '__main__':
     hbl = ATM(1000)
