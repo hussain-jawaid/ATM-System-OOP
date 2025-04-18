@@ -3,6 +3,8 @@ class ATM:
         self.__balance = balance
         self.__pin = 0
 
+        self.menu()
+
     def create_pin(self):
         pin_flag = True
         while pin_flag:
@@ -23,11 +25,11 @@ class ATM:
             try:
                 pin = int(input("Enter your PIN: "))
                 if pin > 0 and pin == self.__pin:
-                    print(f"Balance: ${self.__balance}")
+                    print(f"Your current balance: ${round(self.__balance, 2)}")
                     amount = float(input("Enter the amount to deposit: "))
                     if amount > 0:
                         self.__balance += amount
-                        print(f"${amount} has been deposited into your account.")
+                        print(f"${round(amount, 2)} has been deposited into your account.")
                         deposit_flag = False
                     else:
                         print("Amount must be positive!")
@@ -42,11 +44,11 @@ class ATM:
             try:
                 pin = int(input("Enter your PIN: "))
                 if pin > 0 and pin == self.__pin:
-                    print(f"\nBalance: ${self.__balance}.")
+                    print(f"\nYour current balance: ${round(self.__balance, 2)}.")
                     amount = float(input("Enter the amount to withdraw: "))
                     if amount <= self.__balance and amount > 0:
                         self.__balance -= amount
-                        print(f"${amount} has been withdrawn from your account.")
+                        print(f"${round(amount, 2)} has been withdrawn from your account.")
                         withdraw_flag = False
                     else:
                         print("Amount must be positive and not exceed your current balance!")
@@ -61,7 +63,7 @@ class ATM:
             try:
                 pin = int(input("Enter your PIN: "))
                 if pin == self.__pin:
-                    print(f"Your current balance is ${self.__balance}.")
+                    print(f"Your current balance: ${round(self.__balance, 2)}.")
                     balance_flag = False
                 else:
                     print("You entered an incorrect PIN. Please try again.")
@@ -96,5 +98,4 @@ class ATM:
 
 if __name__ == '__main__':
     hbl = ATM(1000)
-    hbl.menu()
     
