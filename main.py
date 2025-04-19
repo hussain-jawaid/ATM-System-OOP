@@ -1,102 +1,160 @@
-class Atm:
-    def __init__(self, balance):
-        self.__balance = balance
-        self.__pin = 0
-        
-        self.__menu()
+class BankAccounts:
+    accounts = {}
 
-    def __menu(self):
-        flag = True
-        while flag:
+    @classmethod
+    def view_users(cls):
+        for user_obj in cls.accounts.values():
+            print(f"[Username: {user_obj.display_name}, PIN: {user_obj.pin}, Balance: ${user_obj.balance}]")
+
+
+class User:
+    def __init__(self, username, pin, balance):
+        self.display_name = username
+        self.username = username.lower()
+        self.pin = pin
+        self.balance = balance
+
+        if self.username not in BankAccounts.accounts:
+            BankAccounts.accounts[self.username] = self
+        else:
+            print(f"The username '{self.display_name}' is already taken!")
+
+
+class ATM(BankAccounts):
+    def __init__(self):
+        super().__init__()
+        self.show_menu()
+
+    def show_menu(self):
+        while True:
             try:
-                option = int(input("\nHello, how would you like to proceed?\n"
-                            "1. Enter 1 to create a PIN\n"
-                            "2. Enter 2 to deposit\n"
-                            "3. Enter 3 to withdraw\n"
-                            "4. Enter 4 to check balance\n"
-                            "5. Enter 5 to exit\n"
-                            "Choose an option: "))
-                if option == 1:
-                    self.create_pin()
-                elif option == 2:
-                    self.deposit()
-                elif option == 3:
-                    self.withdraw()
-                elif option == 4:
-                    self.check_balance()
-                elif option == 5:
-                    flag = False
+                choice = int(input("\nWelcome! How would you like to proceed?\n"
+                                   "1. Create a new account\n"
+                                   "2. Deposit funds\n"
+                                   "3. Withdraw funds\n"
+                                   "4. Transfer funds\n"
+                                   "5. Check balance\n"
+                                   "6. Exit\n"
+                                   "Enter your choice: "))
+                options = {
+                    1: self.create_account,
+                    2: self.deposit,
+                    3: self.withdraw,
+                    4: self.transfer_money,
+                    5: self.check_balance,
+                    6: self.exit_atm
+                }
+                if choice in options:
+                    options[choice]()
                 else:
-                    print("Invalid option. Please choose a number between 1 and 5.")
+                    print("Invalid option. Please choose between 1 and 6.")
             except ValueError:
-                print("Please choose a valid option!")
+                print("Invalid input. Please enter a number.")
 
-    def create_pin(self):
-        pin_flag = True
-        while pin_flag:
-            try:
-                pin = int(input("Create your PIN (must be a four-digit number): "))
-                if pin > 0 and len(str(pin)) == 4 and pin != self.__pin:
-                    self.__pin = pin
-                    print("Your PIN has been created.")
-                    pin_flag = False
-                else:
-                    print("Please enter a four-digit PIN (must be different from previous)!")
-            except ValueError:
-                print("Please enter a four-digit PIN (letters not allowed)!")
-
-    def deposit(self):
-        deposit_flag = True
-        while deposit_flag:
-            try:
-                pin = int(input("Enter your PIN: "))
-                if pin > 0 and pin == self.__pin:
-                    print(f"Your current balance: ${round(self.__balance, 2)}")
-                    amount = float(input("Enter the amount to deposit: "))
-                    if amount > 0:
-                        self.__balance += amount
-                        print(f"${round(amount, 2)} has been deposited into your account.")
-                        deposit_flag = False
+    @classmethod
+    def create_account(cls):
+        while True:
+            username = input("Enter a username: ").strip()
+            if username.lower() not in cls.accounts:
+                while True:
+                    pin = input("Create a 4-digit PIN: ").strip()
+                    if pin.isdigit() and len(pin) == 4:
+                        try:
+                            initial_deposit = int(input("Enter the initial deposit amount: "))
+                            if initial_deposit >= 0:
+                                User(username, pin, initial_deposit)
+                                print("Your account has been created successfully.")
+                                return
+                            else:
+                                print("Initial deposit must be non-negative.")
+                        except ValueError:
+                            print("Please enter a valid amount.")
                     else:
-                        print("Amount must be positive!")
-                else:
-                    print("You entered an incorrect PIN. Please try again.")
-            except ValueError:
-                print("Please enter a four-digit PIN (letters not allowed)!")
+                        print("Please enter a valid 4-digit PIN.")
+            else:
+                print(f"The username '{username}' is already taken!")
 
-    def withdraw(self):
-        withdraw_flag = True
-        while withdraw_flag:
+    @classmethod
+    def deposit(cls):
+        user = cls.authenticate_user()
+        if user:
             try:
-                pin = int(input("Enter your PIN: "))
-                if pin > 0 and pin == self.__pin:
-                    print(f"\nYour current balance: ${round(self.__balance, 2)}")
-                    amount = float(input("Enter the amount to withdraw: "))
-                    if amount <= self.__balance and amount > 0:
-                        self.__balance -= amount
-                        print(f"${round(amount, 2)} has been withdrawn from your account.")
-                        withdraw_flag = False
-                    else:
-                        print("Amount must be positive and not exceed your current balance!")
+                amount = int(input("Enter the amount to deposit: "))
+                if amount > 0:
+                    user.balance += amount
+                    print(f"${amount} has been deposited into {user.display_name}'s account.")
                 else:
-                    print("You entered an incorrect PIN. Please try again.")
+                    print("Amount must be positive!")
             except ValueError:
-                print("Please enter a four-digit PIN (letters not allowed)!")
+                print("Invalid amount.")
 
-    def check_balance(self):
-        balance_flag = True
-        while balance_flag:
+    @classmethod
+    def withdraw(cls):
+        user = cls.authenticate_user()
+        if user:
             try:
-                pin = int(input("Enter your PIN: "))
-                if pin == self.__pin:
-                    print(f"Your current balance: ${round(self.__balance, 2)}")
-                    balance_flag = False
+                amount = int(input("Enter the amount to withdraw: "))
+                if 0 < amount <= user.balance:
+                    user.balance -= amount
+                    print(f"${amount} has been withdrawn from {user.display_name}'s account.")
                 else:
-                    print("You entered an incorrect PIN. Please try again.")
+                    print("Insufficient balance or invalid amount.")
             except ValueError:
-                print("Please enter a four-digit PIN (letters not allowed)!")
+                print("Invalid amount.")
+
+    @classmethod
+    def check_balance(cls):
+        user = cls.authenticate_user()
+        if user:
+            print(f"{user.display_name}, your current balance is ${user.balance}.")
+
+    @classmethod
+    def transfer_money(cls):
+        sender = cls.authenticate_user()
+        if not sender:
+            return
+
+        try:
+            amount = int(input("Enter the amount to transfer: "))
+            if amount <= 0 or amount > sender.balance:
+                print("Insufficient balance or invalid amount.")
+                return
+        except ValueError:
+            print("Invalid amount.")
+            return
+
+        recipient_username = input("Enter the recipient's username: ").lower()
+        if recipient_username == sender.username:
+            print("You cannot transfer funds to yourself.")
+            return
+
+        recipient = cls.accounts.get(recipient_username)
+        if recipient:
+            sender.balance -= amount
+            recipient.balance += amount
+            print(f"${amount} has been transferred to '{recipient.display_name}'.")
+        else:
+            print("Recipient username not found.")
+
+    @classmethod
+    def authenticate_user(cls):
+        username = input("\nEnter your username: ").lower()
+        user = cls.accounts.get(username)
+        if not user:
+            print("Username not found.")
+            return None
+        pin = input("Enter your PIN: ").strip()
+        if pin == user.pin:
+            return user
+        else:
+            print("Incorrect PIN.")
+            return None
+
+    def exit_atm(self):
+        print("Thank you for using our ATM. Goodbye!")
+        exit()
 
 
-if __name__ == '__main__':
-    hbl = Atm(1000)
-    
+# Start ATM session
+if __name__ == "__main__":
+    ATM()
