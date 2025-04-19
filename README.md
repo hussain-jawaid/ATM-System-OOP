@@ -1,18 +1,19 @@
-# ATM-System-OOP
+# ATM System (Command Line)
 
-This is a basic ATM (Automated Teller Machine) simulation project built using Python. It uses Object-Oriented Programming (OOP) principles to manage banking operations like creating a PIN, depositing money, withdrawing funds, and checking the balance.
+This is a simple command-line-based ATM system built using Python and Object-Oriented Programming (OOP) concepts.
 
 ## Features
 
-- PIN creation and validation
-- Deposit functionality with PIN verification
-- Withdraw functionality with balance check
-- Secure balance checking
-- Encapsulated attributes for basic security
+- Create new user accounts
+- Deposit and withdraw funds
+- Transfer money between users
+- Check account balance
+- PIN-based authentication
 
-## Installation
+## How to Run
 
-1. Clone the repository:
+1. Make sure you have Python installed.
+2. Run the script:
+
 ```bash
-git clone https://github.com/hussain-jawaid/ATM-System-OOP
-cd ATM-System-OOP
+python main.py
