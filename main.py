@@ -1,13 +1,6 @@
 class BankAccounts:
     accounts = {}
 
-    @classmethod
-    def view_users(cls):
-        for user_obj in cls.accounts.values():
-            print(f"[Username: {user_obj.display_name}, PIN: {user_obj.pin}, Balance: ${user_obj.balance}]")
-
-
-class User:
     def __init__(self, username, pin, balance):
         self.display_name = username
         self.username = username.lower()
@@ -22,7 +15,6 @@ class User:
 
 class ATM(BankAccounts):
     def __init__(self):
-        super().__init__()
         self.show_menu()
 
     def show_menu(self):
@@ -62,7 +54,7 @@ class ATM(BankAccounts):
                         try:
                             initial_deposit = int(input("Enter the initial deposit amount: "))
                             if initial_deposit >= 0:
-                                User(username, pin, initial_deposit)
+                                BankAccounts(username, pin, initial_deposit)
                                 print("Your account has been created successfully.")
                                 return
                             else:
@@ -153,7 +145,6 @@ class ATM(BankAccounts):
     def exit_atm(self):
         print("Thank you for using our ATM. Goodbye!")
         exit()
-
 
 # Start ATM session
 if __name__ == "__main__":
